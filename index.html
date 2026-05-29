@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - ryuusketch_</title>
+    <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-body:#fafafa; --bg-card:#fff; --text-main:#262626; --text-secondary:#8e8e8e; --border-color:#dbdbdb; --link-color:#0095f6; --divider-color:#dbdbdb; --login-input:#fafafa; }
+        @media (prefers-color-scheme:dark){:root{--bg-body:#000;--bg-card:#121212;--text-main:#fafafa;--text-secondary:#a8a8a8;--border-color:#363636;--link-color:#49b1ff;--divider-color:#363636;--login-input:#1a1a1a;}}
+        *{box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background-color:var(--bg-body);color:var(--text-main);margin:0;padding:0;min-height:100vh}
+       .music-player-container {
+       
+    position: fixed;
+    right: -210px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    transition: right 0.3s ease;
+}
+
+.music-player-container.show {
+    right: 0;
+}
+
+.toggle-btn {
+    position: absolute;
+    left: -35px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 70px;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 10px 0 0 10px;
+    color: #1db954;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-top: -35px; /* Biar sejajar tengah */
+}
+
+.music-player {
+    width: 210px;
+    background: #181818;
+    border-radius: 15px 0 0 15px;
+    padding: 15px;
+    box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+}
+
+.player-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+.player-img { width: 45px; height: 45px; border-radius: 5px; object-fit: cover; }
+.player-info { flex: 1; min-width: 0; }
+.player-title { color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.player-artist { color: #b3b3b3; font-size: 10px; }
+.progress-bar { width: 100%; height: 4px; background: #404040; border-radius: 2px; margin-bottom: 15px; cursor: pointer; position: relative; }
+.progress { height: 100%; background: #1db954; border-radius: 2px; width: 35%; position: absolute; left: 0; top: 0; }
+.controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
+.control-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; padding: 5px; }
+.control-btn.play { width: 40px; height: 40px; background: #1db954; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.volume-bar { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.volume-icon { color: #b3b3b3; font-size: 12px; }
+.volume-slider { flex: 1; height: 4px; background: #404040; border-radius: 2px; position: relative; cursor: pointer; }
+.volume-level { width: 70%; height: 100%; background: #b3b3b3; border-radius: 2px; position: absolute; left: 0; top: 0; }
+        .login-page{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:20px;position:relative}
+        .login-bg-blur{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+        .login-bg-blur img{width:100%;height:100%;object-fit:cover;filter:blur(1px);opacity:0.4}
+        .login-container{position:relative;z-index:1;width:100%;max-width:320px;padding:30px 25px;background:rgba(255,255,255,0.9);border:1px solid var(--border-color);border-radius:20px;text-align:center}
+        @media (prefers-color-scheme:dark){.login-container{background:rgba(20,20,20,0.9)}}
+        .login-logo{width:80px;height:80px;border-radius:50%;margin:0 auto 15px;object-fit:cover;border:2px solid var(--border-color)}
+        .login-title{font-size:26px;margin-bottom:20px}
+        .login-form{display:flex;flex-direction:column;gap:12px}
+        .input-group{text-align:left}
+        .input-label{font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;display:block}
+        .input-wrapper{display:flex;align-items:center;background:var(--login-input);border:1px solid var(--border-color);border-radius:10px;padding:0 12px}
+        .input-icon{font-size:16px;margin-right:8px}
+        .login-input{width:100%;padding:12px 0;font-size:14px;border:none;background:transparent;color:var(--text-main);outline:none}
+        .login-button{width:100%;padding:12px;font-size:15px;font-weight:600;color:#fff;background:var(--link-color);border:none;border-radius:10px;cursor:pointer;margin-top:8px}
+        .forgot-password{margin-top:15px;font-size:13px}
+        .forgot-password a{color:var(--link-color);text-decoration:none;cursor:pointer}
+        .forgot-password a:hover{text-decoration:underline}
+        .login-error{color:#ff4757;font-size:13px;margin-top:10px;display:none}
+        .forgot-page{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;background:var(--bg-body);justify-content:center;align-items:center;flex-direction:column;padding:20px}
+        .forgot-page.show{display:flex}
+        .forgot-content{text-align:center;max-width:400px}
+        .forgot-img {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+        .forgot-title{font-size:20px;margin-bottom:15px}
+        .forgot-text{font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:25px}
+        .back-button{padding:12px 25px;background:var(--link-color);color:#fff;border:none;border-radius:10px;font-size:14px;cursor:pointer}
+        .transition-page{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;justify-content:center;align-items:center}
+        .transition-bg{position:absolute;top:0;left:0;width:100%;height:100%}
+        .transition-bg img{width:100%;height:100%;object-fit:cover;filter:blur(1px);opacity:0.5}
+        .transition-content{position:relative;z-index:1;text-align:center}
+        .transition-gift{width:180px;height:180px;border-radius:20px;object-fit:contain;animation:pulse 1.5s infinite}
+        .transition-text{font-size:22px;font-weight:700;color:#fff;margin-top:20px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+        @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+        .transition-page.show{display:flex}
+        .main-content{display:none}
+        .container{max-width:600px;margin:0 auto;background:var(--bg-card);min-height:100vh}
+        .welcome-header {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    padding: 0;
+    text-align: right;
+    font-family: 'Grand Hotel', cursive;
+    font-size: 28px;
+}
+        .profile-section {
+    padding: 30px 30px 30px;
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+}
+        .profile-pic{width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid var(--border-color)}
+        .username{font-size:26px;font-weight:700;margin-bottom:10px}
+        .bio-text{font-size:17px;line-height:1.5}
+        .section-gap{height:2px;background:var(--divider-color);margin:0 30px}
+        .description-section{padding:30px;border-top:2px solid var(--divider-color)}
+        .desc-text{font-size:17px;line-height:1.7;margin-bottom:20px}
+        
+        .desc-img {
+    width: 40%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 12px;
+    background: var(--bg-body);
+    display: block;
+    margin: 0 auto;  /* TAMBAHKAN INI - Tengah */
+}
+
+        .projects-section{padding:30px;border-top:2px solid var(--divider-color)}
+        .section-title{font-size:14px;font-weight:600;color:var(--text-secondary);text-align:center;margin-bottom:20px;letter-spacing:1px}
+        .projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.jumpscare-btn {
+    display: none; /* SEMBRUNYIKAN dulu */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.jumpscare-btn.show {
+    display: block;
+}
+
+.jumpscare-btn img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.jumpscare-video {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    background: transparent;
+    
+    align-items: center;
+    justify-content: center;
+}
+
+.jumpscare-video.show {
+    display: flex;
+}
+
+.jumpscare-video img {
+    width: 150%;
+    max-width: 150%;  /* PENUH */
+    height: 150%;
+    max-height: 150%;  /* PENUH */
+    object-fit: contain;
+}
+
+
+.project-item img {
+    width: 100%;
+    height: auto;  /* Biar otomatis */
+    object-fit: contain;  /* Ganti dari cover - ga ke crop */
+    max-height: 500px;  /* Batas tinggi max */
+}
+
+        .apps-section{padding:30px;border-top:2px solid var(--divider-color)}
+        .apps-grid{display:flex;justify-content:center;gap:30px}
+        .app-icon{width:50px;height:50px;border-radius:12px;object-fit:contain;background:var(--bg-body);padding:5px}
+        .closing-section{padding:30px;border-top:2px solid var(--divider-color)}
+        .closing-text{font-size:17px;font-weight:600;text-align:center;margin-bottom:20px}
+        .closing-img {
+    width: 50%;
+    aspect-ratio: 4/3;
+    object-fit: contain;
+    border-radius: 12px;
+    background: transparent;
+    display: block;
+    margin: 0 auto;  /* TAMBAHKAN INI - Tengah */
+}
+
+        .contact-section{padding:30px;border-top:2px solid var(--divider-color);text-align:center}
+        .contact-items{display:flex;justify-content:center;gap:40px}
+        .contact-item{display:flex;flex-direction:column;align-items:center;text-decoration:none}
+        .contact-logo{width:36px;height:36px;margin-bottom:8px;object-fit:contain}
+        .contact-label{font-size:12px;color:var(--text-secondary)}
+        .footer-section{padding:30px 30px 40px;text-align:center;border-top:2px solid var(--divider-color)}
+        .footer-text{font-size:13px;color:var(--text-secondary);margin-bottom:15px;line-height:1.5}
+        .qr-code{width:150px;height:150px;object-fit:contain;background:#fff;padding:8px;border-radius:10px}
+        .copyright{font-size:13px;color:var(--text-secondary);margin-top:15px}
+        @media (max-width:500px){.container{max-width:100%}.welcome-header{font-size:30px;padding:40px 20px 30px}.profile-section{padding:0 20px 20px;flex-direction:column;align-items:center;text-align:center;gap:20px}.profile-pic{width:120px;height:120px}.username{font-size:22px}.apps-grid{gap:20px}.app-icon{width:40px;height:40px}.contact-items{gap:30px}}
+        .lock-page {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Background dengan blur */
+.lock-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/lock-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(1px);
+    transform: scale(1.05);
+    z-index: -1;
+    opacity: 0.8;
+}
+
+/* Overlay */
+.lock-page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+.lock-page.show {
+    display: flex;
+}
+
+/* Icon - Lebih kecil + Tengok */
+.lock-icon {
+    width: 200px;  /* 80px -> 60px */
+    height: 200px;
+    margin-bottom: 0.01px;
+    object-fit: contain;
+}
+
+/* Tulisan - Lebih kecil */
+.lock-title {
+    color: #fff;
+    font-size: 22px;  /* 28px -> 22px */
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.lock-subtitle {
+    color: #fff;
+    font-size: 16px;  /* 20px -> 16px */
+    margin-bottom: 15px;
+}
+
+.lock-time {
+    color: #fff;
+    font-size: 24px;  /* 32px -> 24px */
+    font-weight: 300;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.lock-date {
+    color: #fff;
+    font-size: 14px;  /* 16px -> 14px */
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+.lock-detail {
+    color: #fff;
+    font-size: 12px;  /* 14px -> 12px */
+    line-height: 1.6;
+    text-align: center;
+}
+
+.lock-detail span {
+    color: #ff3b30;
+    font-weight: 600;
+}
+
+.lock-message {
+    color: #fff;
+    font-size: 11px;  /* 13px -> 11px */
+    margin-top: 15px;
+    opacity: 0.6;
+}
+
+.side-blur-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100vh;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    filter: blur(1px);
+}
+
+/* Main content - Custom BG + Blur */
+.main-content {
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Background dengan blur */
+.main-content::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('images/portfolio-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(1px);  /* blur SEDIKIT - atur 0-20px */
+    transform: scale(1.05);  /*防止边缘blur */
+    z-index: -1;
+    opacity: 0.6;  /* Biar agak gelap */
+}
+
+/* Overlay gelap - Biar teks */
+.main-content::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);  /* Overlay gelap */
+    z-index: -1;
+}
+
+/* Jam Digital - Hidden dulu */
+.digital-clock {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 9999;
+    font-family: 'Courier New', monospace;
+    display: none;
+}
+
+.digital-clock.show {
+    display: block;
+}
+
+.clock-time {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;  /* PUTIH */
+    letter-spacing: 3px;
+    background: #000;  /* HITAM */
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 2px solid #c0c0c0;  /* SILVER */
+    display: inline-block;
+}
+
+.clock-date {
+    font-size: 12px;
+    color: #fff;
+    background: #000;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #c0c0c0;
+    margin-top: 5px;
+    display: inline-block;
+}
+    </style>
+</head>
+<body>
+    <div class="digital-clock" id="digitalClock">
+    <div class="clock-time" id="clockTime">00:00:00</div>
+    <div class="clock-date" id="clockDate">1 Januari 2025</div>
+</div>
+</div>
+    <div class="music-player-container" id="musicPlayerContainer" style="display:none;">
+    <button class="toggle-btn" id="toggleBtn" onclick="toggleMusicPlayer()">◀</button>
+    <div class="music-player">
+        <div class="player-header">
+            <img src="images/cover-lagu.jpg" class="player-img" id="coverImg">
+            <div class="player-info">
+                <div class="player-title" id="songTitle">Pilih Lagu</div>
+                <div class="player-artist" id="artistName">Artist</div>
+            </div>
+        </div>
+        <div class="progress-bar" onclick="seekSong(event)"><div class="progress" id="progressBar"></div></div>
+        <div class="controls">
+            <button class="control-btn" onclick="prevSong()">⏮</button>
+            <button class="control-btn play" onclick="playPause()" id="playBtn">▶</button>
+            <button class="control-btn" onclick="nextSong()">⏭</button>
+        </div>
+        <div class="volume-bar">
+            <span class="volume-icon">🔈</span>
+            <div class="volume-slider" onclick="setVolume(event)"><div class="volume-level" id="volumeLevel"></div></div>
+        </div>
+    </div>
+</div>
+<!-- Button -Hidden -->
+<a href="javascript:void(0)" class="jumpscare-btn" id="jumpscareBtn" onclick="playJumpscare()">
+    <img src="images/jumpscare-btn.png" alt="Jangan pencet">
+</a>
+
+<!-- Video -->
+<div class="jumpscare-video" id="jumpscareVideo" onclick="closeJumpscare()">
+    <img src="video/jumpscare.gif" alt="">
+</div>
+
+<audio id="jumpscareAudio" src="video/jumpscare-audio.mp3"></audio>
+
+    <div class="lock-page" id="lockPage">
+    <img src="images/lock-icon.png" class="lock-icon">
+    <div class="lock-title">Account Locked</div>
+    <div class="lock-subtitle">Coba lagi dalam:</div>
+    <div class="lock-time" id="lockTime">100:00:00:00:00:00</div>
+    <div class="lock-date" id="lockDate">Rabu, 15 Januari 2125</div>
+    <div class="lock-detail" id="lockDetail">
+        <div><span>100</span> Tahun</div>
+        <div><span>0</span> Bulan</div>
+        <div><span>0</span> Minggu</div>
+        <div><span>0</span> Hari</div>
+        <div><span>0</span> Jam</div>
+        <div><span>0</span> Menit</div>
+        <div><span>0</span> Detik</div>
+    </div>
+    <div class="lock-message">Ngeyel sih.</div>
+</div>
+    <div class="login-page" id="loginPage">
+        <div class="login-bg-blur"><img src="images/login-bg.jpg"></div>
+        <div class="login-container">
+            <img src="images/foto-profil.jpg" class="login-logo">
+            <div class="login-title">ryuusketch_</div>
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <label class="input-label">USERNAME</label>
+                    <div class="input-wrapper"><span class="input-icon"></span><input type="text" class="login-input" id="username" placeholder="Masukkan username" required></div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">PASSWORD</label>
+                    <div class="input-wrapper"><span class="input-icon"></span><input type="password" class="login-input" id="password" placeholder="Masukkan password" required></div>
+                </div>
+                <button type="submit" class="login-button">Masuk</button>
+            </form>
+            <div class="forgot-password"><a onclick="showForgotPage()">Lupa Password?</a></div>
+            <div class="login-error" id="loginError">Salah gobloug</div>
+        </div>
+    </div>
+    <div class="forgot-page" id="forgotPage">
+        <div class="forgot-content">
+            <img src="images/lupa-password.gif" class="forgot-img">
+            <div class="forgot-title">Lupa Password?</div>
+            <div class="forgot-text">Sama gw juga lupa wkwk</div>
+            <button class="back-button" onclick="backToLogin()">Kembali</button>
+        </div>
+    </div>
+    <div class="transition-page" id="transitionPage">
+        <div class="transition-bg"><img src="images/transisi-bg.jpg"></div>
+        <div class="transition-content">
+            <img src="images/transisi.gif" class="transition-gift">
+            <div class="transition-text">Login Succes!</div>
+        </div>
+    </div>
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="welcome-header">Portofolio</div>
+            <div class="profile-section">
+                <img src="images/foto-profil.jpg" class="profile-pic">
+                <div class="profile-info">
+                    <div class="username">ryuusketch_</div>
+                    <div class="bio-text">Digital Artist.<br>Anime Style Illustration<br>Based in Jambi, Indonesia</div>
+                </div>
+            </div>
+            <div class="section-gap"></div>
+            <div class="description-section">
+                <div class="desc-text">Yo! welcome to my portofolio, tau lah ya apa artinya? yessir saya buka komis, untuk artstyle gw bisa kalian liat beberapa projek yang udah udah di bawah ya.</div>
+                <img src="images/deskripsi1.jpg" class="desc-img">
+            </div>
+            <div class="section-gap"></div>
+            <div class="projects-section">
+                <div class="section-title">MY PROJECTS</div>
+                <div class="projects-grid">
+                    <div class="project-item"><img src="images/proyek1.jpg"></div>
+                    <div class="project-item"><img src="images/proyek2.jpg"></div>
+                    <div class="project-item"><img src="images/proyek3.jpg"></div>
+                    <div class="project-item"><img src="images/proyek4.jpg"></div>
+                    <div class="project-item"><img src="images/proyek5.jpg"></div>
+                    <div class="project-item"><img src="images/proyek6.jpg"></div>
+                </div>
+            </div>
+            <div class="section-gap"></div>
+            <div class="apps-section">
+                <div class="section-title">APPS THAT I USE</div>
+                <div class="apps-grid">
+                    <img src="images/app1.png" class="app-icon">
+                    <img src="images/app2.png" class="app-icon">
+                    <img src="images/app3.png" class="app-icon">
+                </div>
+            </div>
+            <div class="section-gap"></div>
+            <div class="closing-section">
+                <div class="closing-text">Tertarik commiss dengan saya?<br>Link Kontak ada di bawah!</div>
+                <img src="images/custom1.png" class="closing-img">
+            </div>
+            <div class="contact-section">
+                <div class="contact-title">CONTACT ME</div>
+                <div class="contact-items">
+                    <a href="mailto:rezymaulana2005@gmail.com" class="contact-item">
+                        <img src="images/icon-email.png" class="contact-logo">
+                        <span class="contact-label">Email</span>
+                    </a>
+                    <a href="https://wa.me/6285380697779" class="contact-item">
+                        <img src="images/icon-whatsapp.png" class="contact-logo">
+                        <span class="contact-label">WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <div class="footer-text">Jangan di Scan:v</div>
+                <img src="images/qrcode.png" class="qr-code">
+                <div class="copyright">© 2026 ryuusketch_</div>
+            </div>
+        </div>
+        <audio id="audioPlayer" src="music/lagu1.mp3"></audio>
+    </div>
+    <script>
+var correctUsername = "admin";
+var correctPassword = "admin";
+var errorCount = 0;
+var errorMessages = ["Jir Salah!", "Pliss jangan salah lagi", "Salah lagi? wkwk"];
+
+var loginForm = document.getElementById("loginForm");
+var loginPage = document.getElementById("loginPage");
+var mainContent = document.getElementById("mainContent");
+var loginError = document.getElementById("loginError");
+var transitionPage = document.getElementById("transitionPage");
+var forgotPage = document.getElementById("forgotPage");
+var lockPage = document.getElementById("lockPage");
+var lockTime = document.getElementById("lockTime");
+var lockDate = document.getElementById("lockDate");
+var lockDetail = document.getElementById("lockDetail");
+
+function showForgotPage() { forgotPage.classList.add("show"); }
+function backToLogin() { forgotPage.classList.remove("show"); }
+
+function startCountdown() {
+    var totalSeconds = 100 * 365 * 24 * 60 * 60;
+    var interval = setInterval(function() {
+        totalSeconds--;
+        var years = Math.floor(totalSeconds / (365 * 24 * 60 * 60));
+        var months = Math.floor((totalSeconds % (365 * 24 * 60 * 60)) / (30 * 24 * 60 * 60));
+        var weeks = Math.floor((totalSeconds % (30 * 24 * 60 * 60)) / (7 * 24 * 60 * 60));
+        var days = Math.floor((totalSeconds % (7 * 24 * 60 * 60)) / (24 * 60 * 60));
+        var hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+        var minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+        var seconds = totalSeconds % 60;
+        lockTime.innerHTML = String(years).padStart(2,"0")+":"+String(months).padStart(2,"0")+":"+String(weeks).padStart(2,"0")+":"+String(days).padStart(2,"0")+":"+String(hours).padStart(2,"0")+":"+String(minutes).padStart(2,"0")+":"+String(seconds).padStart(2,"0");
+        lockDetail.innerHTML = "<div><span>"+years+"</span> Tahun</div><div><span>"+months+"</span> Bulan</div><div><span>"+weeks+"</span> Minggu</div><div><span>"+days+"</span> Hari</div><div><span>"+hours+"</span> Jam</div><div><span>"+minutes+"</span> Menit</div><div><span>"+seconds+"</span> Detik</div>";
+        if (totalSeconds <= 0) clearInterval(interval);
+    }, 1000);
+    var now = new Date();
+    now.setFullYear(now.getFullYear() + 100);
+    lockDate.innerHTML = now.toLocaleDateString("id-ID", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+}
+
+
+loginForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    var inputUser = document.getElementById("username").value;
+    var inputPass = document.getElementById("password").value;
+    if (inputUser === correctUsername && inputPass === correctPassword) {
+    // TAMBAHKAN INI - 显示玩家后隐藏
+    document.getElementById("musicPlayerContainer").style.display = "block";
+    // JANGAN添加show类！让它保持隐藏
+
+    document.getElementById("digitalClock").classList.add("show");
+    document.getElementById("jumpscareBtn").classList.add("show");
+    
+    loginPage.style.display = "none";
+    transitionPage.classList.add("show");
+    setTimeout(function() {
+        transitionPage.classList.remove("show");
+        mainContent.style.display = "block";
+    }, 3000);
+}
+ else {
+        errorCount++;
+        loginError.style.display = "block";
+        loginError.innerHTML = errorMessages[errorCount - 1];
+        if (errorCount >= 3) {
+            loginError.style.display = "none";
+            loginPage.style.display = "none";
+            lockPage.classList.add("show");
+            startCountdown();
+        }
+    }
+});
+
+// ========== JAM DIGITAL ==========
+function updateClock() {
+    var now = new Date();  // Langgun device
+    
+    // Ga perlu ubah timezone!
+    var hours = String(now.getHours()).padStart(2, '0');
+    var minutes = String(now.getMinutes()).padStart(2, '0');
+    var seconds = String(now.getSeconds()).padStart(2, '0');
+    var time = hours + ':' + minutes + ':' + seconds;
+    
+    var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    
+    var dayName = days[now.getDay()];
+    var day = now.getDate();
+    var month = months[now.getMonth()];
+    var year = now.getFullYear();
+    
+    var date = day + ' ' + month + ' ' + year;
+    
+    document.getElementById('clockTime').innerText = time;
+    document.getElementById('clockDate').innerText = date;
+}
+
+// Refresh setiap 100ms (lebih akurat)
+setInterval(function() {
+    updateClock();
+}, 100);
+
+// ===== MUSIC PLAYER =====
+var audio = document.getElementById("audioPlayer");
+var isPlaying = false;
+var currentSong = 0;
+
+// LAGU LIST
+var songs = [
+    { title: "Iris Out", artist: "Kenshi Yonezu", src: "music/lagu1.mp3", cover: "images/cover1.jpg" },
+    { title: "Starlight", artist: "Ring", src: "music/lagu2.mp3", cover: "images/cover2.jpg" },
+    { title: "Admiring You", artist: "Pharozen", src: "music/lagu3.mp3", cover: "images/cover3.jpg" }
+];
+
+// INIT LAGU PERTAMA
+document.getElementById("songTitle").innerHTML = songs[0].title;
+document.getElementById("artistName").innerHTML = songs[0].artist;
+document.getElementById("coverImg").src = songs[0].cover;
+audio.src = songs[0].src;
+audio.volume = 0.1;
+document.getElementById("volumeLevel").style.width = "10%";
+
+function toggleMusicPlayer() {
+    var container = document.getElementById("musicPlayerContainer");
+    var btn = document.getElementById("toggleBtn");
+    container.classList.toggle("show");
+    btn.innerHTML = container.classList.contains("show") ? "▶" : "◀";
+}
+
+function playPause() {
+    var playBtn = document.getElementById("playBtn");
+    if (isPlaying) {
+        audio.pause();
+        playBtn.innerHTML = "▶";
+    } else {
+        if (!audio.src) {
+            audio.src = songs[currentSong].src;
+            document.getElementById("songTitle").innerHTML = songs[currentSong].title;
+            document.getElementById("artistName").innerHTML = songs[currentSong].artist;
+            document.getElementById("coverImg").src = songs[currentSong].cover;
+        }
+        audio.play();
+        playBtn.innerHTML = "⏸";
+    }
+    isPlaying = !isPlaying;
+}
+
+function prevSong() {
+    currentSong = (currentSong - 1 + songs.length) % songs.length;
+    setSong();
+}
+
+function nextSong() {
+    currentSong = (currentSong + 1) % songs.length;
+    setSong();
+}
+
+function setSong() {
+    audio.src = songs[currentSong].src;
+    document.getElementById("songTitle").innerHTML = songs[currentSong].title;
+    document.getElementById("artistName").innerHTML = songs[currentSong].artist;
+    document.getElementById("coverImg").src = songs[currentSong].cover;
+    isPlaying = true;
+    document.getElementById("playBtn").innerHTML = "⏸";
+    audio.play().catch(function(e){console.log(e);});
+}
+
+function seekSong(event) {
+    var progressBar = event.currentTarget;
+    var clickPosition = (event.offsetX / progressBar.offsetWidth);
+    if (audio.duration) {
+        audio.currentTime = (clickPosition * audio.duration);
+    }
+}
+
+function setVolume(event) {
+    var volumeBar = event.currentTarget;
+    var clickPosition = (event.offsetX / volumeBar.offsetWidth);
+    audio.volume = clickPosition;
+    document.getElementById("volumeLevel").style.width = (clickPosition * 100) + "%";
+}
+
+audio.addEventListener("timeupdate", function() {
+    if (audio.duration) {
+        var progress = (audio.currentTime / audio.duration) * 100;
+        document.getElementById("progressBar").style.width = progress + "%";
+    }
+});
+
+audio.addEventListener("ended", function() {
+    nextSong();
+});
+// ===== END MUSIC PLAYER =====
+
+// Jumpscare
+function playJumpscare() {
+    document.getElementById("jumpscareVideo").classList.add("show");
+    var audio = document.getElementById("jumpscareAudio");
+    audio.currentTime = 0;
+    audio.play();
+
+    // Volume kecilin!
+    audio.volume = 0.5;  /* 0.0 sampe 1.0 - 0.3 = 30% */
+    audio.currentTime = 0;
+    audio.play();
+    
+    // Auto close 2 detik
+    setTimeout(function() {
+        closeJumpscare();
+    }, 1000);
+}
+
+function closeJumpscare() {
+    document.getElementById("jumpscareVideo").classList.remove("show");
+    var audio = document.getElementById("jumpscareAudio");
+    audio.pause();
+    audio.currentTime = 0;
+}
+</script>
+</body>
+</html>
